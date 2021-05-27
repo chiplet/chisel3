@@ -50,6 +50,7 @@ object Module extends SourceInfoDoc {
     //   - reset whenStack to be empty
     //   - set currentClockAndReset
     val module: T = bc  // bc is actually evaluated here
+    module.finishInstantiate()
 
     if (Builder.whenDepth != 0) {
       throwException("Internal Error! when() scope depth is != 0, this should have been caught!")
@@ -211,6 +212,11 @@ package experimental {
   // TODO: seal this?
   abstract class BaseModule extends HasId {
     _parent.foreach(_.addId(this))
+
+    /** Code block which will be executed at the end of Module.
+      * Plugin-writers can override this function to execute codes at the end of Module evaluation.
+      */
+    def finishInstantiate(): Unit = {}
 
     //
     // Builder Internals - this tracks which Module RTL construction belongs to.
