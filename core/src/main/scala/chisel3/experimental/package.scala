@@ -165,4 +165,7 @@ package object experimental {
   val prefix = chisel3.internal.prefix
   // Use to remove prefixes not in provided scope
   val noPrefix = chisel3.internal.noPrefix
+
+  /** Append code block to the last of this Module instantiate. */
+  def registerFinishAction(block: () => Unit): Unit = Module.currentModule.get.finishActions.append(block)
 }

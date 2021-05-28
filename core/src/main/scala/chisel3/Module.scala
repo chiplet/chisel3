@@ -213,10 +213,11 @@ package experimental {
   abstract class BaseModule extends HasId {
     _parent.foreach(_.addId(this))
 
-    /** Code block which will be executed at the end of Module.
-      * Plugin-writers can override this function to execute codes at the end of Module evaluation.
-      */
-    def finishInstantiate(): Unit = {}
+    /** Code blocks which will be executed at the end of Module. */
+    private[chisel3] val finishActions: collection.mutable.ListBuffer[() => Unit] = collection.mutable.ListBuffer.empty
+
+    /** execute code blocks in [[finishActions]]. */
+    private[chisel3] def finishInstantiate(): Unit = finishActions.foreach(_())
 
     //
     // Builder Internals - this tracks which Module RTL construction belongs to.
